@@ -8,8 +8,8 @@
 
           <q-card flat>
             <q-list
-            v-for="(item, i) in items"
-            :key="item.word"
+            v-for="(row, i) in rows"
+            :key="row.word"
             padding
             >
               <q-item>
@@ -21,13 +21,13 @@
 
                 <q-item-section @click="triggerWordRating(item.word)">
                   <q-item-label class="text-subtitle1">
-                    {{ item.word }}
+                    {{ row.word }}
                   </q-item-label>
                 </q-item-section>
 
                 <q-item-section side top>
                   <q-chip color="primary" text-color="white" class="text-weight-bold">
-                    {{ Number(item.count).toLocaleString() }}
+                    {{ Number(row.count).toLocaleString() }}
                   </q-chip>
                 </q-item-section>
               </q-item>
@@ -53,24 +53,24 @@ export default {
       apiUrl : process.env.VUE_APP_ROOT_API,
       projectDescUrl: process.env.VUE_APP_PROJECT_DESCRIPTION_URL,
       rows: [],
-      items: [],
       errors: []
     }
   },
   methods: {
-    fetchData() {
+    async fetchData() {
+
       Loading.show({
         spinner: QSpinnerPie,
       })
 
-      axios.get(this.apiUrl + '/list')
-      .then(response => {
-        this.rows = response.data.message
-        Loading.hide()
-      })
-      .catch(e => {
-        Loading.hide()
-      })
+      await axios.get(this.apiUrl + '/list')
+        .then(response => {
+          this.rows = response.data.message
+          Loading.hide()
+        })
+        .catch(e => {
+          Loading.hide()
+        })
     },
     makeString(params) {
       var txt = "";
@@ -110,16 +110,6 @@ export default {
     })
   },
   mounted() {
-    setTimeout(() => {
-      const interval = setInterval(() => {
-        if (!this.rows.length) {
-          clearInterval(interval)
-        } else {
-          this.items.push(this.rows.shift())
-        }
-      }, 100)
-    }, 250)
-
     this.fetchData()
     this.interval = setInterval(function() {
       this.fetchData();
