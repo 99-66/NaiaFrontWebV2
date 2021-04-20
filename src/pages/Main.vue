@@ -19,7 +19,7 @@
                   </q-avatar>
                 </q-item-section>
 
-                <q-item-section @click="triggerWordRating(item.word)">
+                <q-item-section @click="triggerWordRating(row.word)">
                   <q-item-label class="text-subtitle1">
                     {{ row.word }}
                   </q-item-label>
