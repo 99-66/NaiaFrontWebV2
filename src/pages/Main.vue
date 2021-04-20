@@ -20,7 +20,7 @@
                 </q-item-section>
 
                 <q-item-section @click="triggerWordRating(row.word)">
-                  <q-item-label class="text-subtitle1">
+                  <q-item-label class="text-subtitle1 overflow-auto">
                     {{ row.word }}
                   </q-item-label>
                 </q-item-section>
