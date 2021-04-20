@@ -6,7 +6,7 @@
       </h1>
 
       <p>여러 채널에서 수집한 문장, 제목에서 명사만을 추출하여 빈도수 상위 30개의 단어를 보여준다. 단어 목록은 현재시간 기준으로 3시간 전까지의 수집한 문장들의 단어를 기준으로하여 수치와 함께 보여준다
-        일부 불필요하다고 생각되는 단어들은 <strong>불용어</strong>로 분리하여 순위에서 제외시켰다. 해당 목록은 아래에서 확인할 수 있다
+        일부 불필요하다고 생각되는 단어들은 <strong class="text-weight-bold">불용어</strong>로 분리하여 순위에서 제외시켰다. 해당 목록은 아래에서 확인할 수 있다
       </p>
 
       <h2 id="stopword" class="doc-heading doc-h2">
@@ -50,7 +50,7 @@
           </q-item-section>
 
           <q-item-section>
-            <q-item-label>
+            <q-item-label class="overflow-auto">
               <span class="text-weight-bold">https://github.com/99-66</span>
             </q-item-label>
           </q-item-section>
@@ -74,7 +74,7 @@
           </q-item-section>
 
           <q-item-section>
-            <q-item-label>
+            <q-item-label class="overflow-auto">
               <span class="text-weight-bold">{{ projectDescUrl }}</span>
             </q-item-label>
           </q-item-section>
@@ -98,7 +98,7 @@
           </q-item-section>
 
           <q-item-section>
-            <q-item-label>
+            <q-item-label class="overflow-auto">
               <span class="text-weight-bold">6199@outlook.kr</span>
             </q-item-label>
           </q-item-section>
