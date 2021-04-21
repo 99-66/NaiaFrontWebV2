@@ -44,7 +44,7 @@
 
 <script>
 import axios from 'axios'
-import { Loading,  QSpinnerPie } from 'quasar'
+import { Loading,  Notify, QSpinnerPie } from 'quasar'
 
 export default {
   name: 'Main',
@@ -101,10 +101,10 @@ export default {
       .catch(e => {
       })
 
-    }
+    },
   },
   created () {
-    this.$q.notify.registerType('wordRating', {
+    Notify.registerType('wordRating', {
       progress: true,
       textColor: 'white',
     })
