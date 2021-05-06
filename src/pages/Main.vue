@@ -2,67 +2,71 @@
   <q-page class="relative-position">
     <q-scroll-area class="absolute full-width full-height">
         <q-page class="doc-page">
-          <h2 class="doc-page doc-h2">
-            <span>Word Cloud</span>
-          </h2>
+            <div  v-if="words">
+            <h2 class="doc-page doc-h2">
+              <span>Word Cloud</span>
+            </h2>
 
-          <q-card flat>
-            <div>
-              <vue-word-cloud
-                style="
-                height: 380px;
-                width: auto;"
-                :words="words"
-                :animation-duration="3000"
-                :animation-overlap="0.2"
-                :weight="1"
-                :spacing="0.6"
-                :color="color"
-                :font-size-ratio="6"
-                font-family="fantasy"
+            <q-card flat>
+              <div>
+                <vue-word-cloud
+                  style="
+                  height: 380px;
+                  width: auto;"
+                  :words="words"
+                  :animation-duration="3000"
+                  :animation-overlap="0.2"
+                  :weight="1"
+                  :spacing="0.6"
+                  :color="color"
+                  :font-size-ratio="6"
+                  font-family="fantasy"
+                >
+                  <template slot-scope="{text, weight, word}">
+                    <div :title="weight" style="cursor: pointer;" @click="triggerWordRating(text)">
+                      {{ text }}
+                    </div>
+                  </template>
+                </vue-word-cloud>
+              </div>
+            </q-card>
+          </div>
+
+          <div>
+            <h2 class="doc-page doc-h2-inner">
+              <span>Word Ranking</span>
+            </h2>
+
+            <q-card flat>
+              <q-list
+              v-for="(row, i) in rows"
+              :key="row.word"
+              padding
               >
-                <template slot-scope="{text, weight, word}">
-                  <div :title="weight" style="cursor: pointer;" @click="triggerWordRating(text)">
-                    {{ text }}
-                  </div>
-                </template>
-              </vue-word-cloud>
-            </div>
-          </q-card>
+                <q-item>
+                  <q-item-section top avatar>
+                    <q-avatar>
+                      {{ i + 1 }}
+                    </q-avatar>
+                  </q-item-section>
 
-          <h2 class="doc-page doc-h2-inner">
-            <span>Word Ranking</span>
-          </h2>
+                  <q-item-section @click="triggerWordRating(row.word)">
+                    <q-item-label class="text-subtitle1 overflow-auto">
+                      {{ row.word }}
+                    </q-item-label>
+                  </q-item-section>
 
-          <q-card flat>
-            <q-list
-            v-for="(row, i) in rows"
-            :key="row.word"
-            padding
-            >
-              <q-item>
-                <q-item-section top avatar>
-                  <q-avatar>
-                    {{ i + 1 }}
-                  </q-avatar>
-                </q-item-section>
+                  <q-item-section side top>
+                    <q-chip color="primary" text-color="white" class="text-weight-bold">
+                      {{ Number(row.count).toLocaleString() }}
+                    </q-chip>
+                  </q-item-section>
+                </q-item>
 
-                <q-item-section @click="triggerWordRating(row.word)">
-                  <q-item-label class="text-subtitle1 overflow-auto">
-                    {{ row.word }}
-                  </q-item-label>
-                </q-item-section>
-
-                <q-item-section side top>
-                  <q-chip color="primary" text-color="white" class="text-weight-bold">
-                    {{ Number(row.count).toLocaleString() }}
-                  </q-chip>
-                </q-item-section>
-              </q-item>
-
-              <q-separator spaced/>
-            </q-list>
-          </q-card>
+                <q-separator spaced/>
+              </q-list>
+            </q-card>
+          </div>
 
         </q-page>
     </q-scroll-area>
@@ -86,7 +90,7 @@ export default {
       colorItems: ['#ffd077', '#3bc4c7', '#3a9eea', '#ff4e69', '#461e47'],
       rows: [],
       errors: [],
-      words: []
+      words: null
     }
   },
   methods: {
