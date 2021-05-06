@@ -18,7 +18,7 @@
                 :weight="1"
                 :spacing="0.6"
                 :color="color"
-                font-size-ratio="5"
+                :font-size-ratio="6"
                 font-family="fantasy"
               >
                 <template slot-scope="{text, weight, word}">
