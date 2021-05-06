@@ -3,6 +3,34 @@
     <q-scroll-area class="absolute full-width full-height">
         <q-page class="doc-page">
           <h2 class="doc-page doc-h2">
+            <span>Word Cloud</span>
+          </h2>
+
+          <q-card flat>
+            <div>
+              <vue-word-cloud
+                style="
+                height: 380px;
+                width: auto;"
+                :words="words"
+                :animation-duration="3000"
+                :animation-overlap="0.2"
+                :weight="1"
+                :spacing="0.6"
+                :color="color"
+                font-size-ratio="5"
+                font-family="fantasy"
+              >
+                <template slot-scope="{text, weight, word}">
+                  <div :title="weight" style="cursor: pointer;" @click="triggerWordRating(text)">
+                    {{ text }}
+                  </div>
+                </template>
+              </vue-word-cloud>
+            </div>
+          </q-card>
+
+          <h2 class="doc-page doc-h2-inner">
             <span>Word Ranking</span>
           </h2>
 
@@ -46,19 +74,23 @@
 import axios from 'axios'
 import { Loading,  Notify, QSpinnerPie } from 'quasar'
 
+const Chance = require('chance');
+const chance = new Chance();
+
 export default {
   name: 'Main',
   data() {
     return {
       apiUrl : process.env.VUE_APP_ROOT_API,
       projectDescUrl: process.env.VUE_APP_PROJECT_DESCRIPTION_URL,
+      colorItems: ['#ffd077', '#3bc4c7', '#3a9eea', '#ff4e69', '#461e47'],
       rows: [],
-      errors: []
+      errors: [],
+      words: []
     }
   },
   methods: {
     async fetchData() {
-
       Loading.show({
         spinner: QSpinnerPie,
       })
@@ -71,6 +103,11 @@ export default {
         .catch(e => {
           Loading.hide()
         })
+
+      await axios.get(this.apiUrl + '/wordcloud')
+      .then(response => {
+        this.words = response.data.message
+      })
     },
     makeString(params) {
       var txt = "";
@@ -102,8 +139,11 @@ export default {
       })
 
     },
+    chooseWordColor(params) {
+
+    }
   },
-  created () {
+  created() {
     Notify.registerType('wordRating', {
       progress: true,
       textColor: 'white',
@@ -112,9 +152,17 @@ export default {
   mounted() {
     this.fetchData()
     this.interval = setInterval(function() {
-      this.fetchData();
+      this.fetchData()
     }.bind(this), 300000)
   },
+  computed: {
+    color: function() {
+      var colors = this.colorItems
+      return function() {
+        return chance.pickone(colors)
+      };
+    },
+  }
 }
 </script>
 
@@ -132,6 +180,14 @@ export default {
   padding: 0.5rem 0
   font-weight: 500
   border-bottom: 1px solid #ccc
-  margin: 4rem 0 1.5rem
+  margin: 1rem 0 1.5rem
+
+.doc-h2-inner
+  font-size: 1.5rem
+  line-height: 1.5rem
+  padding: 0.5rem 0
+  font-weight: 500
+  border-bottom: 1px solid #ccc
+  margin: 3rem 0 1.5rem
 
 </style>
