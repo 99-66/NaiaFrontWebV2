@@ -2,7 +2,7 @@
   <q-page class="relative-position">
     <q-scroll-area class="absolute full-width full-height">
         <q-page class="doc-page">
-            <div  v-if="words">
+            <div v-if="words">
             <h2 class="doc-page doc-h2">
               <span>Word Cloud</span>
             </h2>
