@@ -9,6 +9,11 @@
         일부 불필요하다고 생각되는 단어들은 <strong class="text-weight-bold">불용어</strong>로 분리하여 순위에서 제외시켰다. 해당 목록은 아래에서 확인할 수 있다
       </p>
 
+      <p>
+        <strong class="text-weight-bold"><a class="none-a-tag" href="/related-word">RelatedWord</a></strong> 메뉴를 통해 특정 단어와 연관된 단어 목록들을 네트워크 그래프 형태로 확인할 수 있습니다. 또한 최근 날짜기준의 트윗 목록도 함께 확인할 수 있습니다
+        (트윗 목록은 최근 100개까지만 보여줍니다)
+      </p>
+
       <h2 id="stopword" class="doc-heading doc-h2">
         StopWord
       </h2>

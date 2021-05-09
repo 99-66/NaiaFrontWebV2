@@ -10,6 +10,11 @@ const routes = [
         name: 'Main'
       },
       {
+        path: '/related-word',
+        component: () => import('pages/RelatedWord'),
+        name: 'Related Word'
+      },
+      {
         path: '/about',
         component: () => import('pages/About'),
         name: 'About'
