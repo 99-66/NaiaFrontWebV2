@@ -1,11 +1,9 @@
 <template>
-  <div v-if="setData">
-    <q-card class="bg-white full-width">
-      <q-card-section>
-        <canvas id="line-chart"></canvas>
-      </q-card-section>
-    </q-card>
-  </div>
+  <q-card class="bg-white full-width">
+    <q-card-section>
+      <canvas id="line-chart"></canvas>
+    </q-card-section>
+  </q-card>
 </template>
 
 <script>
@@ -20,8 +18,7 @@ export default {
       total: [],
       sns: [],
       article: [],
-      community: [],
-      setData: false
+      community: []
     }
   },
   mounted () {
@@ -29,7 +26,6 @@ export default {
   },
   methods: {
     async createChart (chartId) {
-      this.setData = false
       await axios.get(this.apiUrl + '/word/count')
       .then(response => {
         this.labels = response.data.message.date
@@ -37,7 +33,6 @@ export default {
         this.sns = response.data.message.sns
         this.article = response.data.message.article
         this.community = response.data.message.community
-        this.setData = true
       })
 
       const ctx = document.getElementById(chartId)
