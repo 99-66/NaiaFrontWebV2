@@ -12,8 +12,16 @@
             </q-card>
           </q-item-section>
 
-          <q-item-section avatar>
-            <q-btn size="md" color="primary" icon="search" label="Search" @click="search"/>
+          <q-item-section class="col-xs-1">
+            <q-btn size="md" color="primary" label="Search" @click="search"/>
+          </q-item-section>
+
+          <q-item-section class="col-xs-2">
+            <q-select outlined v-model="graphHeight" :options="graphHeightOptions" :dense=true label="결과 화면 높이">
+              <template v-slot:prepend>
+                <q-icon name="height" />
+              </template>
+            </q-select>
           </q-item-section>
         </q-item>
       </div>
@@ -26,7 +34,14 @@
                 :net-nodes="nodes"
                 :net-links="links"
                 :options="options"
+                ref="network"
               />
+            </q-item-section>
+
+            <q-item-section top side>
+                <q-item clickable class="justify-center" @click="screenShot">
+                  <q-icon name="image" size="25px"/>Download
+                </q-item>
             </q-item-section>
           </q-item>
         </q-list>
@@ -71,22 +86,17 @@ export default {
   },
   data() {
     return {
+      graphHeightOptions: [
+        640, 720, 960, 1080, 1280, 1440
+      ],
+      graphHeight: 720,
+
       apiUrl : process.env.VUE_APP_ROOT_API,
       word: '',
       words: [],
       nodes: [],
       setNodes: false,
       links: [],
-      options: {
-        force: 3000,
-        nodeSize: 25,
-        nodeLabels: true,
-        linkWidth: 1,
-        fontSize: 15,
-        size: {
-          h: 760
-        }
-      },
       setTweets: false,
       tweets: [],
       columns: [
@@ -121,6 +131,7 @@ export default {
       return await axios.get(url)
     },
     search() {
+      console.log(this.graphHeightSize)
       this.initItems()
       Loading.show({
         spinner: QSpinnerPie,
@@ -155,11 +166,28 @@ export default {
       this.tweets = []
       this.setTweets = false
     },
+
+    screenShot () {
+      this.takeScreenShot()
+    },
+    takeScreenShot () {
+      this.$refs.network.screenShot(this.word + '_연관_단어_그래프.png', null, this.toSvg)
+    },
   },
-  created() {
-  },
-  mounted() {
-  },
+  computed: {
+    options() {
+      return {
+        force: 1500,
+        nodeSize: 25,
+        nodeLabels: true,
+        linkWidth: 1,
+        fontSize: 15,
+        size: {
+          h: this.graphHeight
+        }
+      }
+    }
+  }
 }
 </script>
 
