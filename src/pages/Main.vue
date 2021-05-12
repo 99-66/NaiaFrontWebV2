@@ -2,64 +2,66 @@
   <q-page class="relative-position">
     <q-scroll-area class="absolute full-width full-height">
         <q-page class="doc-page">
-          <h2 class="doc-page doc-h2">
-            <span>Word Statistics</span>
-          </h2>
-
           <div>
-            <q-chip class="text-weight-bold">최근 3시간 동안 수집된 단어의 수</q-chip>
-            <div class="row">
-              <div class="col">
-                <q-card-section class="col-xs-2">
-                  <div class="text-overline q-mb-xs">ALL</div>
-                  <div class="text-h5 q-mb-xs">{{ tagCount.all | comma }}</div>
-                </q-card-section>
-              </div>
-              <div class="col">
-                <q-card-section class="col-xs-2">
-                  <div class="text-overline q-mb-xs">SNS</div>
-                  <div class="text-h5 q-mb-xs">{{ tagCount.sns | comma }}</div>
-                </q-card-section>
-              </div>
-              <div class="col">
-                <q-card-section class="col-xs-2">
-                  <div class="text-overline q-mb-xs">Article</div>
-                  <div class="text-h5 q-mb-xs">{{ tagCount.article | comma }}</div>
-                </q-card-section>
-              </div>
-              <div class="col">
-                <q-card-section class="col-xs-2">
-                  <div class="text-overline q-mb-xs">Community</div>
-                  <div class="text-h5 q-mb-xs">{{ tagCount.community | comma }}</div>
-                </q-card-section>
+            <h2 class="doc-page doc-h2">
+              <span>Word Statistics</span>
+            </h2>
+
+            <div>
+              <q-chip class="text-weight-bold">최근 3시간 동안 수집된 단어의 수</q-chip>
+              <div class="row">
+                <div class="col">
+                  <q-card-section class="col-xs-2">
+                    <div class="text-overline q-mb-xs">ALL</div>
+                    <div class="text-h5 q-mb-xs">{{ tagCount.all | comma }}</div>
+                  </q-card-section>
+                </div>
+                <div class="col">
+                  <q-card-section class="col-xs-2">
+                    <div class="text-overline q-mb-xs">SNS</div>
+                    <div class="text-h5 q-mb-xs">{{ tagCount.sns | comma }}</div>
+                  </q-card-section>
+                </div>
+                <div class="col">
+                  <q-card-section class="col-xs-2">
+                    <div class="text-overline q-mb-xs">Article</div>
+                    <div class="text-h5 q-mb-xs">{{ tagCount.article | comma }}</div>
+                  </q-card-section>
+                </div>
+                <div class="col">
+                  <q-card-section class="col-xs-2">
+                    <div class="text-overline q-mb-xs">Community</div>
+                    <div class="text-h5 q-mb-xs">{{ tagCount.community | comma }}</div>
+                  </q-card-section>
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <q-chip class="text-weight-bold">7일간 수집된 단어의 수</q-chip>
-            <div class="row justify-center q-pa-lg">
-              <div class="col-md-12">
-                <line-chart></line-chart>
-              </div>
+
+            <div>
+              <q-chip class="text-weight-bold">7일간 수집된 단어의 수</q-chip>
+              <line-chart></line-chart>
             </div>
           </div>
-          <h2 class="doc-page doc-h2-inner">
-            <span>Options</span>
-          </h2>
 
           <div>
-            <q-item>
-              <q-item-section avatar>
-                <q-chip outline rounded color="secondary" icon="filter_alt" label="Filter" />
-              </q-item-section>
-              <q-radio keep-color v-model="filterWord" val="all" label="All" color="teal" />
-              <q-radio keep-color v-model="filterWord" val="sns" label="SNS" color="cyan" />
-              <q-radio keep-color v-model="filterWord" val="article" label="Article" color="red" />
-              <q-radio keep-color v-model="filterWord" val="community" label="Community" color="orange" />
-            </q-item>
+            <h2 class="doc-page doc-h2-inner">
+              <span>Options</span>
+            </h2>
+
+            <div>
+              <q-item>
+                <q-item-section avatar>
+                  <q-chip outline rounded color="secondary" icon="filter_alt" label="Filter" />
+                </q-item-section>
+                <q-radio keep-color v-model="filterWord" val="all" label="All" color="teal" />
+                <q-radio keep-color v-model="filterWord" val="sns" label="SNS" color="cyan" />
+                <q-radio keep-color v-model="filterWord" val="article" label="Article" color="red" />
+                <q-radio keep-color v-model="filterWord" val="community" label="Community" color="orange" />
+              </q-item>
+            </div>
           </div>
 
-            <div v-if="words">
+          <div v-if="words">
             <h2 class="doc-page doc-h2-inner">
               <span>Word Cloud</span>
             </h2>
@@ -169,7 +171,7 @@ export default {
       if (param === undefined) {
         param = "all"
       }
-      await axios.get(this.apiUrl + '/list', {params: { f: param }})
+      await axios.get(this.apiUrl + '/list', {params: {f: param}})
         .then(response => {
           this.rows = response.data.message
           Loading.hide()
@@ -178,23 +180,23 @@ export default {
           Loading.hide()
         })
 
-      await axios.get(this.apiUrl + '/wordcloud', {params: { f: param }})
-      .then(response => {
-        this.words = response.data.message
-      })
+      await axios.get(this.apiUrl + '/wordcloud', {params: {f: param}})
+        .then(response => {
+          this.words = response.data.message
+        })
 
       await axios.get(this.apiUrl + '/tag/count')
-      .then(response => {
-        const data = response.data.message
-        for (let i = 0; i < data.length; i++) {
-          this.tagCount[data[i].tag] = data[i].count
-        }
-      })
+        .then(response => {
+          const data = response.data.message
+          for (let i = 0; i < data.length; i++) {
+            this.tagCount[data[i].tag] = data[i].count
+          }
+        })
     },
     makeString(params) {
       var txt = "";
       for (var i = 0; i < params.length; i++) {
-        txt +=params[i].tag.toUpperCase() + ": " + Math.round(params[i].percent * 100)/100 + "%<br>"
+        txt += params[i].tag.toUpperCase() + ": " + Math.round(params[i].percent * 100) / 100 + "%<br>"
       }
       txt = txt.replace(/\|*$/, '');
       return txt;
@@ -202,23 +204,23 @@ export default {
     triggerWordRating (value) {
       this.tags = [];
       axios.get(this.apiUrl + '/tag/w/' + value)
-      .then(response => {
-        this.tags = response.data.message
-        const notiText = this.makeString(this.tags)
+        .then(response => {
+          this.tags = response.data.message
+          const notiText = this.makeString(this.tags)
 
-        this.$q.notify({
-          type: 'wordRating',
-          icon: 'insert_chart',
-          message: notiText,
-          color: '$dark',
-          group: false,
-          position: 'top-right',
-          html: true,
-          caption: value
+          this.$q.notify({
+            type: 'wordRating',
+            icon: 'insert_chart',
+            message: notiText,
+            color: '$dark',
+            group: false,
+            position: 'top-right',
+            html: true,
+            caption: value
+          })
         })
-      })
-      .catch(e => {
-      })
+        .catch(e => {
+        })
     },
   },
   created() {
