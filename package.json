@@ -1,7 +1,7 @@
 {
   "name": "naia-front-web-v2",
-  "version": "0.0.1",
-  "description": "WhatIssueNow Front Project",
+  "version": "1.2.1",
+  "description": "여러 채널에서 수집한 문장, 제목에서 명사만을 추출하여 빈도수 상위 30개의 단어와 연관된 단어를 보여줍니다. 단어 목록은 현재시간 기준으로 3시간 전까지의 수집한 문장들의 단어를 기준으로하여 수치와 함께 보여줍니다",
   "productName": "WhatIssueNow",
   "author": "99-66 <6199@outlook.kr>",
   "private": true,
@@ -19,12 +19,12 @@
     "chance": "^1.1.7",
     "chart.js": "^2.9.4",
     "core-js": "^3.6.5",
+    "moment": "^2.29.1",
     "quasar": "^1.0.0",
     "vue-chartjs": "^3.5.1",
     "vue-d3-network": "^0.1.28",
     "vue-i18n": "^8.0.0",
-    "vuewordcloud": "^18.7.12",
-    "vuex": "^3.6.2"
+    "vuewordcloud": "^18.7.12"
   },
   "devDependencies": {
     "@quasar/app": "^2.0.0",

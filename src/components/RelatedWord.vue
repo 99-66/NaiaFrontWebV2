@@ -1,9 +1,6 @@
 <template>
-  <q-page class="relative-position">
-    <q-page class="doc-page">
-      <h2 class="doc-page doc-h2">
-        Related Words
-      </h2>
+  <q-card class="bg-white full-width">
+    <q-card-section>
       <div>
         <q-item>
           <q-item-section>
@@ -12,38 +9,46 @@
             </q-card>
           </q-item-section>
 
-          <q-item-section class="col-xs-1">
-            <q-btn size="md" color="primary" label="Search" @click="search"/>
-          </q-item-section>
-
           <q-item-section class="col-xs-2">
-            <q-select outlined v-model="graphHeight" :options="graphHeightOptions" :dense=true label="결과 화면 높이">
-              <template v-slot:prepend>
-                <q-icon name="height" />
-              </template>
-            </q-select>
+            <q-btn size="md" color="primary" label="Search" @click="search"/>
           </q-item-section>
         </q-item>
       </div>
 
-      <div v-if="setNodes">
+      <div v-if="setNodes" id="network-wrapper">
         <q-list bordered class="rounded-borders">
-          <q-item>
-            <q-item-section>
-              <d3-network
-                :net-nodes="nodes"
-                :net-links="links"
-                :options="options"
-                ref="network"
-              />
-            </q-item-section>
+          <div class="row justify-end">
+            <q-btn
+              class="q-pr-md"
+              color="secondary"
+              flat
+              @click="screenShot"
+              :dense="true"
+              icon="image"
+              label="Download"
+            />
+            <q-btn
+              class="q-pr-md"
+              color="secondary"
+              flat
+              @click="toggleFullscreen"
+              :dense="true"
+              :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
+              :label="$q.fullscreen.isActive ? 'Exit Fullscreen' : 'Fullscreen'"
+            />
+          </div>
 
-            <q-item-section top side>
-                <q-item clickable class="justify-center" @click="screenShot">
-                  <q-icon name="image" size="25px"/>Download
-                </q-item>
-            </q-item-section>
-          </q-item>
+            <q-item>
+              <q-item-section>
+                <d3-network
+                  :net-nodes="nodes"
+                  :net-links="links"
+                  :options="options"
+                  ref="network"
+                  id="network"
+                />
+              </q-item-section>
+            </q-item>
         </q-list>
       </div>
 
@@ -70,26 +75,30 @@
         </q-card>
 
       </div>
-    </q-page>
-  </q-page>
+    </q-card-section>
+  </q-card>
 </template>
 
 <script>
 import axios from 'axios'
 import { Loading,  QSpinnerPie } from 'quasar'
 import D3Network from 'vue-d3-network'
+import moment from "moment";
 
 export default {
   name: "RelatedWord",
   components: {
     D3Network
   },
+  props: ['propsword'],
+
   data() {
     return {
       graphHeightOptions: [
         640, 720, 960, 1080, 1280, 1440
       ],
       graphHeight: 720,
+      graphWidth: 740,
 
       apiUrl : process.env.VUE_APP_ROOT_API,
       word: '',
@@ -131,7 +140,10 @@ export default {
       return await axios.get(url)
     },
     search() {
-      console.log(this.graphHeightSize)
+      if (this.word === "") {
+        return
+      }
+
       this.initItems()
       Loading.show({
         spinner: QSpinnerPie,
@@ -171,21 +183,56 @@ export default {
       this.takeScreenShot()
     },
     takeScreenShot () {
-      this.$refs.network.screenShot(this.word + '_연관_단어_그래프.png', null, this.toSvg)
+      const today = moment(new Date()).format('YYYYMMDDHHmmss')
+      this.$refs.network.screenShot(this.word + '_' + today + '_연관_단어_그래프.png', null, this.toSvg)
     },
+
+    toggleFullscreen() {
+      const target = document.getElementById('network-wrapper')
+
+      this.$q.fullscreen.toggle(target)
+        .then(() => {
+
+        })
+        .catch((err) => {
+        })
+    }
   },
   computed: {
     options() {
-      return {
-        force: 1500,
-        nodeSize: 25,
-        nodeLabels: true,
-        linkWidth: 1,
-        fontSize: 15,
-        size: {
-          h: this.graphHeight
+      if (this.$q.fullscreen.isActive === false) {
+        return {
+          force: 1500,
+          nodeSize: 25,
+          nodeLabels: true,
+          linkWidth: 1,
+          fontSize: 15,
+          size: {
+            h: this.graphHeight,
+            w: this.graphWidth
+          }
+        }
+      } else {
+        return {
+          force: 1500,
+          nodeSize: 25,
+          nodeLabels: true,
+          linkWidth: 1,
+          fontSize: 15,
+          size: {
+            h: window.innerHeight,
+            w: window.innerWidth
+          }
         }
       }
+    }
+  },
+  watch: {
+    word: function() {
+      this.search()
+    },
+    propsword: function () {
+      this.word = this.propsword
     }
   }
 }
@@ -216,7 +263,6 @@ export default {
   border-bottom: 1px solid #ccc
   margin: 3rem 0 1.5rem
 
-
 .doc-note
   background-color: #eee
   border-radius: 4px
@@ -227,4 +273,7 @@ export default {
   border-style: solid
   border-color: #9e9e9e
   letter-spacing: 0.5px
+
+#network-wrapper
+ background-color: white
 </style>
