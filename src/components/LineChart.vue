@@ -33,57 +33,60 @@ export default {
         this.sns = response.data.message.sns
         this.article = response.data.message.article
         this.community = response.data.message.community
-      })
-
-      const ctx = document.getElementById(chartId)
-      const wordLineChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: this.labels,
-          datasets: [{
-            data: this.total,
-            label: 'Total',
-            borderColor: '#8e5ea2',
-            fill: false,
-            lineTension: 0
+        const ctx = document.getElementById(chartId)
+        const wordLineChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: this.labels,
+            datasets: [{
+              data: this.total,
+              label: 'Total',
+              borderColor: '#8e5ea2',
+              fill: false,
+              lineTension: 0.9
+            },
+            {
+              data: this.sns,
+              label: 'SNS',
+              borderColor: '#3cba9f',
+              fill: false,
+              lineTension: 0
+            },
+            {
+              data: this.article,
+              label: 'Article',
+              borderColor: '#e8c3b9',
+              fill: false,
+              lineTension: 0
+            },
+            {
+              data: this.community,
+              label: 'Community',
+              borderColor: '#c45850',
+              fill: false,
+              lineTension: 0
+            }]
           },
-          {
-            data: this.sns,
-            label: 'SNS',
-            borderColor: '#3cba9f',
-            fill: false,
-            lineTension: 0
-          },
-          {
-            data: this.article,
-            label: 'Article',
-            borderColor: '#e8c3b9',
-            fill: false,
-            lineTension: 0
-          },
-          {
-            data: this.community,
-            label: 'Community',
-            borderColor: '#c45850',
-            fill: false,
-            lineTension: 0
-          }]
-        },
-        options: {
-          legend: {
-            display: true
-          },
-          title: {
-            display: true,
-            text: '일별 수집한 단어의 수'
+          options: {
+            responsive: true,
+            legend: {
+              display: true
+            },
+            title: {
+              display: true,
+              text: '일별 수집한 단어의 수'
+            }
           }
-        }
+        })
+
+        return wordLineChart
       })
-      return wordLineChart
     }
   }
 }
 </script>
 
 <style lang="sass" scoped>
+#line-chart
+  position: inherit
 </style>
