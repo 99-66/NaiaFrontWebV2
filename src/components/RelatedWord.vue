@@ -5,12 +5,12 @@
         <q-item>
           <q-item-section>
             <q-card flat>
-                <q-input filled v-model="word" :dense=true label="Search Word" v-on:keyup.enter="search"/>
+                <q-input filled v-model="localWord" :dense=true label="Search Word" v-on:keyup.enter="localSearch"/>
             </q-card>
           </q-item-section>
 
           <q-item-section class="col-xs-2">
-            <q-btn size="md" color="primary" label="Search" @click="search"/>
+            <q-btn size="md" color="primary" label="Search" @click="localSearch"/>
           </q-item-section>
         </q-item>
       </div>
@@ -18,6 +18,14 @@
       <div v-if="setNodes" id="network-wrapper">
         <q-list bordered class="rounded-borders">
           <div class="row justify-end">
+            <q-btn
+              class="q-pr-md"
+              color="secondary"
+              flat
+              :dense="true"
+              icon="text_format"
+              :label="resultText"
+            />
             <q-btn
               class="q-pr-md"
               color="secondary"
@@ -38,7 +46,7 @@
             />
           </div>
 
-            <q-item>
+          <q-item>
               <q-item-section>
                 <d3-network
                   :net-nodes="nodes"
@@ -101,6 +109,8 @@ export default {
       graphWidth: 740,
 
       apiUrl : process.env.VUE_APP_ROOT_API,
+      localWord: '',
+      result: '',
       word: '',
       words: [],
       nodes: [],
@@ -155,6 +165,8 @@ export default {
         this.setNodes = this.nodes.length !== 0;
         this.links = response.data.message.links
         Loading.hide()
+
+        this.result = this.word
       })
       .catch(e => {
         Loading.hide()
@@ -169,6 +181,40 @@ export default {
       .catch(e => {
         Loading.hide()
       })
+
+    },
+    localSearch() {
+      if (this.localWord === "") {
+        return
+      }
+
+      this.initItems()
+      Loading.show({
+        spinner: QSpinnerPie,
+      })
+
+      this.fetchWordData(this.localWord)
+        .then(response => {
+          this.nodes = response.data.message.nodes
+          this.setNodes = this.nodes.length !== 0;
+          this.links = response.data.message.links
+          Loading.hide()
+
+          this.result = this.localWord
+        })
+        .catch(e => {
+          Loading.hide()
+        })
+
+      this.fetchRecentlyTweetData(this.localWord)
+        .then(response => {
+          this.tweets = response.data.message
+          this.setTweets = this.tweets.length !== 0
+          Loading.hide()
+        })
+        .catch(e => {
+          Loading.hide()
+        })
 
     },
     initItems() {
@@ -214,7 +260,7 @@ export default {
         }
       } else {
         return {
-          force: 1500,
+          force: 2000,
           nodeSize: 25,
           nodeLabels: true,
           linkWidth: 1,
@@ -225,6 +271,9 @@ export default {
           }
         }
       }
+    },
+    resultText() {
+      return this.result
     }
   },
   watch: {
