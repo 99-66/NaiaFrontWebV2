@@ -166,6 +166,7 @@ export default {
         this.links = response.data.message.links
         Loading.hide()
 
+        this.localWord = this.word
         this.result = this.word
       })
       .catch(e => {
