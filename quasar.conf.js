@@ -102,6 +102,8 @@ module.exports = function (/* ctx */) {
       plugins: [
         'Notify',
         'Loading',
+        'AppFullscreen',
+        'Meta'
       ],
     },
 
@@ -121,7 +123,8 @@ module.exports = function (/* ctx */) {
       manifest: {
         name: `WhatIssueNow`,
         short_name: `WhatIssueNow`,
-        description: `WhatIssueNowV2 Front Project`,
+        description: `여러 채널에서 수집한 문장, 제목에서 명사만을 추출하여 빈도수 상위 30개의 단어와 연관된 단어를 보여줍니다. 단어 목록은 현재시간 기준으로 3시간 전까지의 수집한 문장들의 단어를 기준으로하여 수치와 함께 보여줍니다`,
+        title: 'What Issue Now?',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',

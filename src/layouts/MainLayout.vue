@@ -43,18 +43,6 @@
         </q-item>
 
         <q-item
-          to="/related-word"
-          clickable
-          v-ripple
-        >
-          <q-item-section avatar>
-            <q-icon name="share" size="md" />
-          </q-item-section>
-
-          <q-item-section class="text-h6 text-weight-bold">RelatedWord</q-item-section>
-        </q-item>
-
-        <q-item
           to="/about"
           clickable
           v-ripple

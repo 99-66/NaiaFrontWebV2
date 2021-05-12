@@ -10,11 +10,6 @@ const routes = [
         name: 'Main'
       },
       {
-        path: '/related-word',
-        component: () => import('pages/RelatedWord'),
-        name: 'Related Word'
-      },
-      {
         path: '/about',
         component: () => import('pages/About'),
         name: 'About'
@@ -22,8 +17,6 @@ const routes = [
     ]
   },
 
-  // Always leave this as last one,
-  // but you can also remove it
   {
     path: '*',
     component: () => import('pages/Error404.vue')
