@@ -1,135 +1,145 @@
 <template>
   <q-page class="relative-position">
-    <q-scroll-area class="absolute full-width full-height">
         <q-page class="doc-page">
-          <div>
-            <h2 class="doc-page doc-h2">
-              <span>Word Statistics</span>
-            </h2>
+          <q-splitter
+            v-model="splitterModel"
+            unit="px"
+            style="height: 860px"
+          >
+            <template v-slot:before>
+              <div class="q-pa-md">
+                <div>
+                  <h2 class="doc-page doc-h2">
+                    <span>Word Ranking</span>
+                  </h2>
 
-            <div>
-              <q-chip class="text-weight-bold">최근 3시간 동안 수집된 단어의 수</q-chip>
-              <div class="row">
-                <div class="col">
-                  <q-card-section class="col-xs-2">
-                    <div class="text-overline q-mb-xs">ALL</div>
-                    <div class="text-h5 q-mb-xs">{{ tagCount.all | comma }}</div>
-                  </q-card-section>
-                </div>
-                <div class="col">
-                  <q-card-section class="col-xs-2">
-                    <div class="text-overline q-mb-xs">SNS</div>
-                    <div class="text-h5 q-mb-xs">{{ tagCount.sns | comma }}</div>
-                  </q-card-section>
-                </div>
-                <div class="col">
-                  <q-card-section class="col-xs-2">
-                    <div class="text-overline q-mb-xs">Article</div>
-                    <div class="text-h5 q-mb-xs">{{ tagCount.article | comma }}</div>
-                  </q-card-section>
-                </div>
-                <div class="col">
-                  <q-card-section class="col-xs-2">
-                    <div class="text-overline q-mb-xs">Community</div>
-                    <div class="text-h5 q-mb-xs">{{ tagCount.community | comma }}</div>
-                  </q-card-section>
+                  <q-card flat>
+                    <q-list
+                      v-for="(row, i) in rows"
+                      :key="row.word"
+                      padding
+                    >
+                      <q-item>
+                        <q-item-section top avatar>
+                          <q-avatar>
+                            {{ i + 1 }}
+                          </q-avatar>
+                        </q-item-section>
+
+                        <q-item-section @click="triggerWordRating(row.word)">
+                          <q-item-label class="text-subtitle1 overflow-auto">
+                            {{ row.word }}
+                          </q-item-label>
+                        </q-item-section>
+
+                        <q-item-section side top>
+                          <q-chip color="primary" text-color="white" class="text-weight-bold">
+                            {{ Number(row.count).toLocaleString() }}
+                          </q-chip>
+                        </q-item-section>
+                      </q-item>
+
+                      <q-separator spaced/>
+                    </q-list>
+                  </q-card>
                 </div>
               </div>
-            </div>
+            </template>
 
-            <div>
-              <q-chip class="text-weight-bold">7일간 수집된 단어의 수</q-chip>
-              <line-chart></line-chart>
-            </div>
-          </div>
+            <template v-slot:after>
+              <div class="q-pa-md">
+                <div>
+                  <h2 class="doc-page doc-h2">
+                    <span>Options</span>
+                  </h2>
 
-          <div>
-            <h2 class="doc-page doc-h2-inner">
-              <span>Options</span>
-            </h2>
+                  <div>
+                    <q-item>
+                      <q-item-section avatar>
+                        <q-chip outline rounded color="secondary" icon="filter_alt" label="Filter" />
+                      </q-item-section>
+                      <q-radio keep-color v-model="filterWord" val="all" label="All" color="teal" />
+                      <q-radio keep-color v-model="filterWord" val="sns" label="SNS" color="cyan" />
+                      <q-radio keep-color v-model="filterWord" val="article" label="Article" color="red" />
+                      <q-radio keep-color v-model="filterWord" val="community" label="Community" color="orange" />
+                    </q-item>
+                  </div>
+                </div>
 
-            <div>
-              <q-item>
-                <q-item-section avatar>
-                  <q-chip outline rounded color="secondary" icon="filter_alt" label="Filter" />
-                </q-item-section>
-                <q-radio keep-color v-model="filterWord" val="all" label="All" color="teal" />
-                <q-radio keep-color v-model="filterWord" val="sns" label="SNS" color="cyan" />
-                <q-radio keep-color v-model="filterWord" val="article" label="Article" color="red" />
-                <q-radio keep-color v-model="filterWord" val="community" label="Community" color="orange" />
-              </q-item>
-            </div>
-          </div>
+                <div v-if="words">
+                  <h2 class="doc-page doc-h2-inner">
+                    <span>Word Cloud</span>
+                  </h2>
 
-          <div v-if="words">
-            <h2 class="doc-page doc-h2-inner">
-              <span>Word Cloud</span>
-            </h2>
-
-            <q-card flat>
-              <div>
-                <vue-word-cloud
-                  style="
-                  height: 380px;
-                  width: auto;"
-                  :words="words"
-                  :animation-duration="3000"
-                  :animation-overlap="0.2"
-                  :weight="1"
-                  :spacing="0.6"
-                  :color="color"
-                  :font-size-ratio="6"
-                  font-family="fantasy"
-                >
-                  <template slot-scope="{text, weight, word}">
-                    <div :title="weight" style="cursor: pointer;" @click="triggerWordRating(text)">
-                      {{ text }}
+                  <q-card flat>
+                    <div>
+                      <vue-word-cloud
+                        style="
+                        height: 380px;
+                        width: auto;"
+                        :words="words"
+                        :animation-duration="3000"
+                        :animation-overlap="0.2"
+                        :weight="1"
+                        :spacing="0.6"
+                        :color="color"
+                        :font-size-ratio="6"
+                        font-family="fantasy"
+                      >
+                        <template slot-scope="{text, weight, word}">
+                          <div :title="weight" style="cursor: pointer;" @click="triggerWordRating(text)">
+                            {{ text }}
+                          </div>
+                        </template>
+                      </vue-word-cloud>
                     </div>
-                  </template>
-                </vue-word-cloud>
+                  </q-card>
+                </div>
+
+                <div>
+                  <h2 class="doc-page doc-h2-inner">
+                    <span>Word Statistics</span>
+                  </h2>
+
+                  <div>
+                    <q-chip class="text-weight-bold">최근 3시간 동안 수집된 단어의 수</q-chip>
+                    <div class="row">
+                      <div class="col">
+                        <q-card-section>
+                          <div class="text-overline q-mb-xs">ALL</div>
+                          <div class="text-h5 q-mb-xs">{{ tagCount.all | comma }}</div>
+                        </q-card-section>
+                      </div>
+                      <div class="col">
+                        <q-card-section>
+                          <div class="text-overline q-mb-xs">SNS</div>
+                          <div class="text-h5 q-mb-xs">{{ tagCount.sns | comma }}</div>
+                        </q-card-section>
+                      </div>
+                      <div class="col">
+                        <q-card-section>
+                          <div class="text-overline q-mb-xs">Article</div>
+                          <div class="text-h5 q-mb-xs">{{ tagCount.article | comma }}</div>
+                        </q-card-section>
+                      </div>
+                      <div class="col">
+                        <q-card-section>
+                          <div class="text-overline q-mb-xs">Community</div>
+                          <div class="text-h5 q-mb-xs">{{ tagCount.community | comma }}</div>
+                        </q-card-section>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <q-chip class="text-weight-bold">7일간 수집된 단어의 수</q-chip>
+                    <line-chart></line-chart>
+                  </div>
+                </div>
               </div>
-            </q-card>
-          </div>
-
-          <div>
-            <h2 class="doc-page doc-h2-inner">
-              <span>Word Ranking</span>
-            </h2>
-
-            <q-card flat>
-              <q-list
-              v-for="(row, i) in rows"
-              :key="row.word"
-              padding
-              >
-                <q-item>
-                  <q-item-section top avatar>
-                    <q-avatar>
-                      {{ i + 1 }}
-                    </q-avatar>
-                  </q-item-section>
-
-                  <q-item-section @click="triggerWordRating(row.word)">
-                    <q-item-label class="text-subtitle1 overflow-auto">
-                      {{ row.word }}
-                    </q-item-label>
-                  </q-item-section>
-
-                  <q-item-section side top>
-                    <q-chip color="primary" text-color="white" class="text-weight-bold">
-                      {{ Number(row.count).toLocaleString() }}
-                    </q-chip>
-                  </q-item-section>
-                </q-item>
-
-                <q-separator spaced/>
-              </q-list>
-            </q-card>
-          </div>
-
+            </template>
+          </q-splitter>
         </q-page>
-    </q-scroll-area>
-
   </q-page>
 </template>
 
@@ -160,7 +170,8 @@ export default {
         'sns': 0,
         'article': 0,
         'community': 0
-      }
+      },
+      splitterModel: 300
     }
   },
   methods: {
@@ -260,7 +271,7 @@ export default {
 .doc-page
   padding: 16px 46px
   font-weight: 300
-  max-width: 900px
+  max-width: 1300px
   margin-left: auto
   margin-right: auto
 
