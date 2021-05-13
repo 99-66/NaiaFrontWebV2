@@ -293,7 +293,6 @@ export default {
 .doc-page
   padding: 16px 46px
   font-weight: 300
-  max-width: 1300px
   margin-left: auto
   margin-right: auto
 

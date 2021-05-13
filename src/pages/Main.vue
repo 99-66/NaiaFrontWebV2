@@ -1,8 +1,8 @@
 <template>
   <q-page class="relative-position">
-    <q-page class="doc-page">
+    <q-page class="doc-q-page">
       <div class="row justify-evenly">
-        <div class="col-md-8">
+        <div class="col-md-8 q-pr-md">
           <div>
             <h2 class="doc-page doc-h2">
               <span>Options</span>
@@ -110,6 +110,7 @@
               <q-list
                 v-for="(row, i) in rows"
                 :key="row.word"
+                :dense="true"
               >
                 <q-item>
                   <q-item-section top avatar>
@@ -250,10 +251,16 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.doc-q-page
+  padding: 16px 46px
+  font-weight: 300
+  max-width: 80%
+  margin-left: auto
+  margin-right: auto
+
 .doc-page
   padding: 16px 46px
   font-weight: 300
-  max-width: 1300px
   margin-left: auto
   margin-right: auto
 
